@@ -35,21 +35,17 @@ if ($result->num_rows > 0) {
 
 
 
-$data = array(
-    "name" => "naresh",
-    "email" => "naresh@gmail.com",
-    "phone" => "146745678"
+// $data = array(
+//     "name" => "naresh",
+//     "email" => "naresh@gmail.com",
+//     "phone" => "146745678"
 
-);
+// );
 
-$res = $obj->updateData("users", $data);
+// $res = $obj->updateData("users", $data);
 
 
 exit;
-
-
-
-
 ?>
 
 <!DOCTYPE html>
