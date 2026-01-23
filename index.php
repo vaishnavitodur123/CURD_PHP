@@ -1,51 +1,22 @@
 <?php
-
+session_start();
 include_once("./config/database.php");
 $obj = new Query();
 
-$data = array(
-    "name" => "enna",
-    "email" => "enna@gmail.com",
-    "phone" => "12345678"
-
-);
-// $res = $obj->insertData("users", $data);
-
-$id = 28;
-// $res = $obj->deleteData("users", "id", $id);
 
 
-// getdatabyid
-// $result = $obj->getDataById("users", "*", "id", $id);
-// if ($result->num_rows > 0) {
-//     while ($row = $result->fetch_assoc()) {
-//         echo "<pre>";
-//         // print_r($row);
-//     }
-// }
+if (isset($_GET["action"]) && $_GET["action"] == "delete") {
 
+    $id = $_GET["id"];
+    $res = $obj->deleteData("users", "id", $id);
+    $_SESSION['success'] = "user have been deleted successfully";
+    header("Location: index.php");
+    exit();
 
-$result = $obj->getData("users", "*");
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<pre>";
-        // print_r($row);
-    }
 }
 
+$result = $obj->getData("users", "*");
 
-
-// $data = array(
-//     "name" => "naresh",
-//     "email" => "naresh@gmail.com",
-//     "phone" => "146745678"
-
-// );
-
-// $res = $obj->updateData("users", $data);
-
-
-exit;
 ?>
 
 <!DOCTYPE html>
@@ -72,16 +43,19 @@ exit;
                     <button class="btn btn-success btn-sm float-end"> <a href="./add-user.php" style="float:right">All
                             Users</a></button>
                 </h4>
+
             </div>
         </div>
 
         <!-- Card -->
         <div class="row">
             <div class="col-md-12">
+                <?php include_once("alert.php"); ?>
                 <div class="card shadow-sm">
                     <div class="card-header">
                         All Users
                     </div>
+
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -97,27 +71,36 @@ exit;
                                 </thead>
 
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Amit Sharma</td>
-                                        <td>amit@gmail.com</td>
-                                        <td>9878102933</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Edit</button>
-                                            <button class="btn btn-danger btn-sm">Delete</button>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $i = 1;
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
 
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Rohan Saini</td>
-                                        <td>rohansaini@yopmail.com</td>
-                                        <td>9988012938</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Edit</button>
-                                            <button class="btn btn-danger btn-sm">Delete</button>
-                                        </td>
-                                    </tr>
+
+                                            ?>
+
+                                            <tr>
+                                                <th scope="row"><?php echo $i++; ?></th>
+
+                                                <td><?php echo $row['name']; ?></td>
+                                                <td><?php echo $row['email']; ?></td>
+                                                <td><?php echo $row['phone']; ?></td>
+                                                <td>
+                                                    <a href="edit-user.php?id=<?= $row['id']; ?>"
+                                                        class="btn btn-primary btn-sm">
+                                                        Edit
+                                                    </a>
+
+                                                    <a href="index.php?action=delete&id=<?= $row['id']; ?>"
+                                                        onclick="return confirm('Are you sure you want to delete this user?');"
+                                                        class="btn btn-danger btn-sm">
+                                                        Delete
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                    } ?>
+
                                 </tbody>
                             </table>
                         </div>

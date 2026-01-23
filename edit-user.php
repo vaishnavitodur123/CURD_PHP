@@ -1,3 +1,53 @@
+<?php
+session_start();
+include_once("./config/database.php");
+$obj = new Query();
+
+if (isset($_POST['submit'])) {
+
+    $data = $_POST;
+    $id = $data['id'];
+
+    unset($data['id']);
+    unset($data['submit']);
+
+
+    $res = $obj->updateData("users", $data, "id", $id);
+
+    if ($res) {
+        $_SESSION['success'] = "user have been created successfully";
+
+    } else {
+        $_SESSION['error'] = "user creation failed";
+    }
+
+    header("Location: index.php");
+    exit();
+
+}
+
+
+
+// // getdatabyid
+$user = array();
+if (isset($_GET["id"]) && $_GET["id"] > 0) {
+
+    $id = $_GET["id"];
+    $result = $obj->getDataById("users", "*", "id", $id);
+    if ($result->num_rows > 0) {
+        $user = mysqli_fetch_assoc($result);
+    }
+} else {
+
+    header("Location: index.php");
+    exit();
+}
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +55,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
 
@@ -35,20 +86,23 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Full Name</label>
-                                            <input type="text" class="form-control" name="name" value="<?php echo $user['name'] ?>" />
+                                            <input type="text" class="form-control" name="name"
+                                                value="<?php echo $user['name'] ?>" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" name="email" value="<?php echo $user['email'] ?>" />
+                                            <input type="email" class="form-control" name="email"
+                                                value="<?php echo $user['email'] ?>" />
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Phone No</label>
-                                            <input type="text" class="form-control" name="phone" value="<?php echo $user['phone'] ?>" />
+                                            <input type="text" class="form-control" name="phone"
+                                                value="<?php echo $user['phone'] ?>" />
                                         </div>
                                     </div>
 
@@ -70,7 +124,9 @@
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -82,24 +82,24 @@ class Query extends database
     }
 
 
-    public function updateData($table, $params)
+    public function updateData($table, $params, $fieldswhere, $id)
     {
-        $fields = array();
-        $values = array();
-
-        foreach ($params as $key => $value) {
-            $fields[] = $key;
-            $values[] = $value;
-        }
-
-        $fields = implode(",", $fields);
-        $values = implode("','", $values);
-        $values = "'" . $values . "'";
 
         echo "<pre>";
         $sql = "UPDATE $table SET ";
-        echo $sql;
-        exit;
+        $length = count($params);
+        $i = 1;
+        foreach ($params as $key => $value) {
+
+            if ($i == $length) {
+                $sql .= " $key = '$value' ";
+            } else {
+                $sql .= " $key = '$value', ";
+            }
+            $i++;
+        }
+
+        echo $sql .= "where $fieldswhere = $id";
         $result = $this->connect()->query($sql);
         return $result;
     }
